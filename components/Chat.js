@@ -1,15 +1,7 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  ImageBackground,
-  Text,
-  TextInput,
-  Alert,
-  TouchableOpacity,
-  Button,
-  View
-} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
+// Changes title to the name entered on the start screen
 export default class Chat extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -20,6 +12,7 @@ export default class Chat extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        {/* Sets the background color chosen on start screen */}
         <View
           style={{
             flex: 1,
@@ -33,7 +26,7 @@ export default class Chat extends React.Component {
     );
   }
 }
-
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1

@@ -5,6 +5,7 @@ import Chat from "./components/Chat";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 
+//App navigation
 const navigator = createStackNavigator({
   Start: { screen: Start },
   Chat: { screen: Chat }

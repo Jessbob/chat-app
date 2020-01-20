@@ -29,6 +29,7 @@ export default class ChatApp extends Component {
         </View>
         <View style={styles.settingsContainer}>
           <View style={styles.nameInputContainer}>
+            {/* Sets the name to be passed to the chat screen title */}
             <TextInput
               style={styles.nameInput}
               placeholder="   Your Name"
@@ -39,6 +40,7 @@ export default class ChatApp extends Component {
           <View style={styles.chooseBgContainer}>
             <Text style={styles.chooseBgText}>Choose Background Color</Text>
             <View style={styles.chooseBgItemContainer}>
+              {/* Sets the color to be used as background on the chat screen */}
               <TouchableOpacity
                 onPress={() => this.setState({ color: "#090C08" })}
                 style={[styles.chooseBgItem, styles.chooseBgItemColor1]}
@@ -58,6 +60,7 @@ export default class ChatApp extends Component {
             </View>
           </View>
           <View style={styles.buttonContainer}>
+            {/* Navigates to chat screen with current name and selcted background color. I used touchableOpacity rather than button to add more customization */}
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
@@ -75,6 +78,7 @@ export default class ChatApp extends Component {
     );
   }
 }
+//Styles
 
 const styles = StyleSheet.create({
   backgroundImage: {

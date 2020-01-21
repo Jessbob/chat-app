@@ -8,6 +8,7 @@ export default class Chat extends React.Component {
     messages: []
   };
 
+  //   Add system message and mock message data to start
   componentDidMount() {
     this.setState({
       messages: [
@@ -23,6 +24,7 @@ export default class Chat extends React.Component {
         },
         {
           _id: 2,
+          //   Pulls name from start screen so you know who joined the chat
           text: `${this.props.navigation.state.params.name} joined the chat`,
           createdAt: new Date(),
           system: true
@@ -30,7 +32,7 @@ export default class Chat extends React.Component {
       ]
     });
   }
-
+  // Button to send messages
   onSend(messages = []) {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages)
@@ -60,6 +62,7 @@ export default class Chat extends React.Component {
             onSend={messages => this.onSend(messages)}
             user={{ _id: 1 }}
           />
+          {/* checks os platform if andriod it enables KeyboardSpacer */}
           {Platform.OS === "android" ? <KeyboardSpacer /> : null}
         </View>
       </View>

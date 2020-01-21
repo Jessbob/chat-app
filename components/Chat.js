@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 export default class Chat extends React.Component {
   state = {
@@ -19,6 +20,12 @@ export default class Chat extends React.Component {
             name: "React Native",
             avatar: "https://placeimg.com/140/140/any"
           }
+        },
+        {
+          _id: 2,
+          text: `${this.props.navigation.state.params.name} joined the chat`,
+          createdAt: new Date(),
+          system: true
         }
       ]
     });
@@ -53,6 +60,7 @@ export default class Chat extends React.Component {
             onSend={messages => this.onSend(messages)}
             user={{ _id: 1 }}
           />
+          {Platform.OS === "android" ? <KeyboardSpacer /> : null}
         </View>
       </View>
     );

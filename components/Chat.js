@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Platform } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
+import { StyleSheet, Text, View, Platform, AsyncStorage } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
+import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import firebase from "firebase";
 import "firebase/firestore";
@@ -28,7 +29,13 @@ export default class Chat extends React.Component {
 
     this.state = {
       messages: [],
-      uid: 0
+      uid: 0,
+      isConnected: false,
+      user: {
+        _id: "",
+        name: "",
+        avatar: ""
+      }
     };
   }
 
@@ -92,7 +99,7 @@ export default class Chat extends React.Component {
       _id: this.state.messages[0]._id,
       text: this.state.messages[0].text || "",
       createdAt: this.state.messages[0].createdAt,
-      user: [this.state.uid, this.props.navigation.state.params.name, ""],
+      user: this.state.user,
       image: this.state.messages[0].image || "",
       location: this.state.messages[0].location || null,
       uid: this.state.uid
@@ -107,42 +114,122 @@ export default class Chat extends React.Component {
       }),
       () => {
         this.addMessage();
+        this.saveMessages();
       }
     );
   }
-
-  // Allows users to log in anonymously
-  componentDidMount() {
-    this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
-      if (!user) {
-        await firebase.auth().signInAnonymously();
-      }
-
+  // Load messages from local storage
+  async getMessages() {
+    let messages = "";
+    try {
+      messages = (await AsyncStorage.getItem("messages")) || [];
       this.setState({
-        uid: user.uid
+        messages: JSON.parse(messages)
       });
-
-      this.referenceMessageUser = firebase.firestore().collection("messages");
-      this.unsubscribeMessageUser = this.referenceMessageUser.onSnapshot(
-        this.onCollectionUpdate
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  //Save new messages to local storage
+  async saveMessages() {
+    try {
+      await AsyncStorage.setItem(
+        "messages",
+        JSON.stringify(this.state.messages)
       );
-    });
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          //   Pulls name from start screen so you know who joined the chat
-          text: `${this.props.navigation.state.params.name} joined the chat`,
-          createdAt: new Date(),
-          system: true
-        }
-      ]
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  //Delete local storage for testing. This can be fired in the componentWillUnmount function.
+  async deleteMessage() {
+    try {
+      await AsyncStorage.removeItem("messages");
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  componentDidMount() {
+    //Check to see if user is online
+    NetInfo.isConnected.fetch().then(isConnected => {
+      if (isConnected == true) {
+        console.log("online");
+        this.setState({
+          isConnected: true
+        });
+        // If user is online allow signing in anonymously
+        this.authUnsubscribe = firebase
+          .auth()
+          .onAuthStateChanged(async user => {
+            if (!user) {
+              await firebase.auth().signInAnonymously();
+            }
+
+            this.setState({
+              uid: user.uid,
+              user: {
+                _id: user.uid,
+                name: this.props.navigation.state.params.name,
+                avatar: ""
+              }
+            });
+            // If user is online get messages from firestore
+            this.referenceMessageUser = firebase
+              .firestore()
+              .collection("messages");
+            this.unsubscribeMessageUser = this.referenceMessageUser.onSnapshot(
+              this.onCollectionUpdate
+            );
+          });
+        //   Pulls name from start screen so you know who joined the chat
+        this.setState({
+          messages: [
+            {
+              _id: 1,
+
+              text: `${this.props.navigation.state.params.name} joined the chat`,
+              createdAt: new Date(),
+              system: true
+            }
+          ]
+        });
+        // If user is offline get messages from local storage
+      } else {
+        console.log("offline");
+        this.setState({
+          isConnected: false
+        });
+        this.getMessages();
+        //Let user know they are offline. NOT WOEKING AS EXPECTED
+        this.setState({
+          messages: [
+            {
+              _id: 2,
+
+              text: "You are Offline",
+              createdAt: new Date(),
+              system: true
+            }
+          ]
+        });
+      }
     });
   }
 
   componentWillUnmount() {
+    // Uncomment the following line to trigger the deleteMessages function
+    // this.deleteMessage();
     this.authUnsubscribe();
     this.unsubscribeMessageUser();
+  }
+
+  //Function to disable the input toolbar if user is offline.
+  renderInputToolbar(props) {
+    if (this.state.isConnected == false) {
+    } else {
+      return <InputToolbar {...props} />;
+    }
   }
 
   // Changes title to the name entered on the start screen
@@ -164,6 +251,7 @@ export default class Chat extends React.Component {
           }}
         >
           <GiftedChat
+            renderInputToolbar={this.renderInputToolbar.bind(this)}
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             user={this.user}
@@ -175,6 +263,7 @@ export default class Chat extends React.Component {
     );
   }
 }
+
 // Styles
 const styles = StyleSheet.create({
   container: {

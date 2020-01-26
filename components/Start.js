@@ -62,6 +62,10 @@ export default class ChatApp extends Component {
           <View style={styles.buttonContainer}>
             {/* Navigates to chat screen with current name and selcted background color. I used touchableOpacity rather than button to add more customization */}
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="Enter Chat"
+              accessibilityHint="Click here to enter chat"
+              accessibilityRole="button"
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
                   name: this.state.name,

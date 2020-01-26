@@ -5,6 +5,11 @@ import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import firebase from "firebase";
 import "firebase/firestore";
+import CustomActions from "./CustomActions";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
+import MapView from "react-native-maps";
 
 export default class Chat extends React.Component {
   constructor() {
@@ -201,7 +206,7 @@ export default class Chat extends React.Component {
           isConnected: false
         });
         this.getMessages();
-        //Let user know they are offline. NOT WOEKING AS EXPECTED
+        //Let user know they are offline. NOT WORKING AS EXPECTED
         this.setState({
           messages: [
             {
@@ -239,6 +244,28 @@ export default class Chat extends React.Component {
     };
   };
 
+  renderCustomActions = props => {
+    return <CustomActions {...props} />;
+  };
+
+  renderCustomView = props => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -251,10 +278,12 @@ export default class Chat extends React.Component {
           }}
         >
           <GiftedChat
+            renderCustomView={this.renderCustomView}
+            renderActions={this.renderCustomActions.bind(this)}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
-            user={this.user}
+            user={this.state.user}
           />
           {/* checks os platform if andriod it enables KeyboardSpacer */}
           {Platform.OS === "android" ? <KeyboardSpacer /> : null}

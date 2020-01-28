@@ -14,63 +14,80 @@ export default class CustomActions extends React.Component {
   }
   // Allow access to image library after asking permission
   pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    try {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-    if (status === "granted") {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: "Images"
-      }).catch(error => console.log(error));
-      if (!result.cancelled) {
-        const imageUrl = await this.uploadImageFetch(result.uri);
-        this.props.onSend({ image: imageUrl });
+      if (status === "granted") {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: "Images"
+        }).catch(error => console.log(error));
+        if (!result.cancelled) {
+          const imageUrl = await this.uploadImageFetch(result.uri);
+          this.props.onSend({ image: imageUrl });
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   };
   // Allow access to camera after asking for permission
   takePhoto = async () => {
-    const { status } = await Permissions.askAsync(
-      Permissions.CAMERA_ROLL,
-      Permissions.CAMERA
-    );
+    try {
+      const { status } = await Permissions.askAsync(
+        Permissions.CAMERA_ROLL,
+        Permissions.CAMERA
+      );
 
-    if (status === "granted") {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: "Images"
-      }).catch(error => console.log(error));
-      if (!result.cancelled) {
-        const imageUrl = await this.uploadImageFetch(result.uri);
-        this.props.onSend({ image: imageUrl });
+      if (status === "granted") {
+        let result = await ImagePicker.launchCameraAsync({
+          mediaTypes: "Images"
+        }).catch(error => console.log(error));
+        if (!result.cancelled) {
+          const imageUrl = await this.uploadImageFetch(result.uri);
+          this.props.onSend({ image: imageUrl });
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   };
+
   // Allow access to geo location after asking permission
   getLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    try {
+      const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-    if (status === "granted") {
-      let result = await Location.getCurrentPositionAsync({});
+      if (status === "granted") {
+        let result = await Location.getCurrentPositionAsync({});
 
-      if (result) {
-        this.props.onSend({
-          location: {
-            longitude: result.coords.longitude,
-            latitude: result.coords.latitude
-          }
-        });
+        if (result) {
+          this.props.onSend({
+            location: {
+              longitude: result.coords.longitude,
+              latitude: result.coords.latitude
+            }
+          });
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   // Blob and fetch working to convert and upload images as blobs
   uploadImageFetch = async uri => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const ref = firebase
-      .storage()
-      .ref()
-      .child("my-image");
-    const snapshot = await ref.put(blob);
-    return await snapshot.ref.getDownloadURL();
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const ref = firebase
+        .storage()
+        .ref()
+        .child("my-image");
+      const snapshot = await ref.put(blob);
+      return await snapshot.ref.getDownloadURL();
+    } catch (error) {
+      console.log(error);
+    }
   };
   // Button and list to access the extra options
   onActionPress = () => {

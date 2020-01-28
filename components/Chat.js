@@ -44,31 +44,6 @@ export default class Chat extends React.Component {
     };
   }
 
-  //   Add system message and mock message data to start OLD MOCK DATA
-  // componentDidMount() {
-  //   this.setState({
-  //     messages: [
-  //       {
-  //         _id: 1,
-  //         text: "Hello developer",
-  //         createdAt: new Date(),
-  //         user: {
-  //           _id: 2,
-  //           name: "React Native",
-  //           avatar: "https://placeimg.com/140/140/any"
-  //         }
-  //       },
-  //       {
-  //         _id: 2,
-  //         //   Pulls name from start screen so you know who joined the chat
-  //         text: `${this.props.navigation.state.params.name} joined the chat`,
-  //         createdAt: new Date(),
-  //         system: true
-  //       }
-  //     ]
-  //   });
-  // }
-
   // Gets user info
   get user() {
     return {
@@ -82,7 +57,7 @@ export default class Chat extends React.Component {
   onCollectionUpdate = querySnapshot => {
     const messages = [];
     querySnapshot.forEach(doc => {
-      var data = doc.data();
+      let data = doc.data();
       messages.push({
         _id: data._id,
         text: data.text,
@@ -99,7 +74,7 @@ export default class Chat extends React.Component {
 
   //Function to add a new message document to firebase
   addMessage() {
-    console.log(this.state.messages[0]);
+    //console.log(this.state.messages[0]);
     this.referenceMessages.add({
       _id: this.state.messages[0]._id,
       text: this.state.messages[0].text || "",

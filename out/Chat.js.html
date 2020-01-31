@@ -1,4 +1,32 @@
-import React, { Component } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Chat.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Chat.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from "react";
 import { StyleSheet, Text, View, Platform, AsyncStorage } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
@@ -138,7 +166,7 @@ export default class Chat extends React.Component {
   /**
    * Load messages from local storage
    * @async
-   * @return {Promise<string>} data from local storage
+   * @return {Promise&lt;string>} data from local storage
    */
   async getMessages() {
     let messages = "";
@@ -154,7 +182,7 @@ export default class Chat extends React.Component {
   /**
    * Save new messages to local storage
    * @async
-   * @return {Promise<string>} Saves to local storage
+   * @return {Promise&lt;string>} Saves to local storage
    */
   async saveMessages() {
     try {
@@ -169,7 +197,7 @@ export default class Chat extends React.Component {
   /**
    * Delete local storage for testing. This can be fired in the componentWillUnmount function.
    * @async
-   * @return {Promise<string>} Delete stored messages if needed
+   * @return {Promise&lt;string>} Delete stored messages if needed
    * */
   async deleteMessage() {
     try {
@@ -266,12 +294,12 @@ export default class Chat extends React.Component {
   /**
    * Function to disable the input toolbar if user is offline.
    * @function renderInputToolbar
-   * @return {InputToolbar<props>}
+   * @return {InputToolbar&lt;props>}
    */
   renderInputToolbar(props) {
     if (this.state.isConnected == false) {
     } else {
-      return <InputToolbar {...props} />;
+      return &lt;InputToolbar {...props} />;
     }
   }
 
@@ -283,14 +311,14 @@ export default class Chat extends React.Component {
   };
 
   renderCustomActions = props => {
-    return <CustomActions {...props} />;
+    return &lt;CustomActions {...props} />;
   };
 
   renderCustomView = props => {
     const { currentMessage } = props;
     if (currentMessage.location) {
       return (
-        <MapView
+        &lt;MapView
           style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
           region={{
             latitude: currentMessage.location.latitude,
@@ -306,16 +334,16 @@ export default class Chat extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      &lt;View style={styles.container}>
         {/* Sets the background color chosen on start screen */}
-        <View
+        &lt;View
           style={{
             flex: 1,
             width: "100%",
             backgroundColor: this.props.navigation.state.params.color
           }}
         >
-          <GiftedChat
+          &lt;GiftedChat
             renderCustomView={this.renderCustomView}
             renderActions={this.renderCustomActions.bind(this)}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
@@ -324,9 +352,9 @@ export default class Chat extends React.Component {
             user={this.state.user}
           />
           {/* checks os platform if andriod; KeyboardSpacer is enabled */}
-          {Platform.OS === "android" ? <KeyboardSpacer /> : null}
-        </View>
-      </View>
+          {Platform.OS === "android" ? &lt;KeyboardSpacer /> : null}
+        &lt;/View>
+      &lt;/View>
     );
   }
 }
@@ -337,3 +365,26 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#deleteMessage">deleteMessage</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#initializeApp">initializeApp</a></li><li><a href="global.html#onActionPress">onActionPress</a></li><li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li><li><a href="global.html#pickImage">pickImage</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#takePhoto">takePhoto</a></li><li><a href="global.html#uploadImageFetch">uploadImageFetch</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Jan 31 2020 10:23:19 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

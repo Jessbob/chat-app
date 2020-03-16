@@ -62,4 +62,4 @@ The chat-app was written in [React Native](https://facebook.github.io/react-nati
 This will install all the libraries required for navigation.  
 [More Info](https://reactnavigation.org/docs/en/getting-started.html)  
 
-[My Kanban board](https://trello.com/b/aLIIMsBR/chatapp)
+
